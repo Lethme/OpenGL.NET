@@ -10,11 +10,14 @@ using OpenTK.Graphics;
 using OpenTK.Input;
 using OpenTK.Graphics.OpenGL;
 
-namespace OpenGL.NET
+using Graphics = OpenGL.Window.Graphics.Graphics;
+using OpenGL.Window.Graphics.Properties;
+
+namespace OpenGL
 {
-    class Window : GameWindow
+    class OpenGLWindow : GameWindow
     {
-        public Window
+        public OpenGLWindow
         (
             int width,
             int height,
@@ -27,7 +30,7 @@ namespace OpenGL.NET
             TargetUpdateFrequency = updateFrequency;
             TargetRenderFrequency = renderFrequency;
         }
-        public Window() : base
+        public OpenGLWindow() : base
         (
             WindowDefaultSettings.WindowWidth,
             WindowDefaultSettings.WindowHeight,
@@ -44,6 +47,7 @@ namespace OpenGL.NET
         }
         protected override void OnLoad(EventArgs e)
         {
+            Graphics.SetBackground(Color.CornflowerBlue);
             base.OnLoad(e);
         }
         protected override void OnUnload(EventArgs e)
@@ -56,21 +60,16 @@ namespace OpenGL.NET
         }
         protected override void OnRenderFrame(FrameEventArgs e)
         {
-            GL.Clear(ClearBufferMask.ColorBufferBit);
-            GL.ClearColor(Color.CornflowerBlue);
+            Graphics.Clear();
 
-            GL.Begin(PrimitiveType.Quads);
-
-            GL.Color3(Color.Yellow);
-            GL.Vertex2(0, 0);
-            GL.Color3(Color.Green);
-            GL.Vertex2(1, 0);
-            GL.Color3(Color.Red);
-            GL.Vertex2(1, -1);
-            GL.Color3(Color.BlueViolet);
-            GL.Vertex2(0, -1);
-
-            GL.End();
+            Graphics.Rectangle
+            (
+                x1: -0.5f, y1: 0.5f,
+                x2: 0.5f, y2: 0.5f,
+                x3: 0.5f, y3: -0.5f,
+                x4: -0.5f, y4: -0.5f,
+                fillColor: Color.Yellow
+            );
 
             Context.SwapBuffers();
             base.OnRenderFrame(e);

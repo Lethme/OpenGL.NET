@@ -5,13 +5,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace OpenGL.NET
+namespace OpenGL
 {
     class Program
     {
         static void Main(string[] args)
         {
-            var window = new Window
+            var window = new OpenGLWindow
             (
                 width: 1200,
                 height: 800,
