@@ -39,6 +39,14 @@ namespace OpenGL.Window.Graphics.Properties
         {
             return FloatPoint.Create(first.X - second.X, first.Y - second.Y);
         }
+        public static implicit operator (float X, float Y)(FloatPoint point)
+        {
+            return (point.X, point.Y);
+        }
+        public static implicit operator FloatPoint((float X, float Y) point)
+        {
+            return new FloatPoint(point.X, point.Y);
+        }
         public static FloatPoint Create(float x = 0.0f, float y = 0.0f) => new FloatPoint(x, y);
     }
 }

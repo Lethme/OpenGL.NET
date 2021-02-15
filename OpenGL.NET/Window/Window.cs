@@ -12,23 +12,36 @@ using OpenTK.Graphics.OpenGL;
 
 using Graphics = OpenGL.Window.Graphics.Graphics;
 using OpenGL.Window.Graphics.Properties;
+using OpenGL.Window.Graphics.Figures;
+using OpenGL.Window.Graphics.Pictures;
+
+using OpenGL.UserPictures;
 
 namespace OpenGL
 {
-    class OpenGLWindow : GameWindow
+    public class OpenGLWindow : GameWindow
     {
+        public Picture WindowPicture { get; }
         public OpenGLWindow
         (
             int width,
             int height,
             string title = WindowDefaultSettings.WindowTitle,
             int updateFrequency = WindowDefaultSettings.WindowUpdateFrequency,
-            int renderFrequency = WindowDefaultSettings.WindowRenderFrequency
+            int renderFrequency = WindowDefaultSettings.WindowRenderFrequency,
+            FloatColor backgroundColor = null,
+            Picture picture = null
         )
             : base(width, height, GraphicsMode.Default, title)
         {
+            Graphics.Initialize(this);
             TargetUpdateFrequency = updateFrequency;
             TargetRenderFrequency = renderFrequency;
+
+            if (picture == null) WindowPicture = Picture.Create();
+            else WindowPicture = picture;
+
+            Graphics.SetBackground(backgroundColor);
         }
         public OpenGLWindow() : base
         (
@@ -38,8 +51,11 @@ namespace OpenGL
             WindowDefaultSettings.WindowTitle
         )
         {
+            Graphics.Initialize(this);
             TargetUpdateFrequency = WindowDefaultSettings.WindowUpdateFrequency;
             TargetRenderFrequency = WindowDefaultSettings.WindowRenderFrequency;
+            WindowPicture = Picture.Create();
+            Graphics.SetBackground(Color.White);
         }
         protected override void OnUpdateFrame(FrameEventArgs e)
         {
@@ -47,7 +63,6 @@ namespace OpenGL
         }
         protected override void OnLoad(EventArgs e)
         {
-            Graphics.SetBackground(Color.CornflowerBlue);
             base.OnLoad(e);
         }
         protected override void OnUnload(EventArgs e)
@@ -56,21 +71,12 @@ namespace OpenGL
         }
         protected override void OnResize(EventArgs e)
         {
+            GL.Viewport(0, 0, Width, Height);
             base.OnResize(e);
         }
         protected override void OnRenderFrame(FrameEventArgs e)
         {
-            Graphics.Clear();
-
-            Graphics.Rectangle
-            (
-                x1: -0.5f, y1: 0.5f,
-                x2: 0.5f, y2: 0.5f,
-                x3: 0.5f, y3: -0.5f,
-                x4: -0.5f, y4: -0.5f,
-                fillColor: Color.Yellow
-            );
-
+            WindowPicture.Draw();
             Context.SwapBuffers();
             base.OnRenderFrame(e);
         }

@@ -1,9 +1,12 @@
-﻿using System;
+﻿using OpenGL.Window.Graphics.Properties;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+
+using OpenGL.UserPictures;
 
 namespace OpenGL
 {
@@ -17,7 +20,9 @@ namespace OpenGL
                 height: 800,
                 title: "Test OpenGL Application",
                 updateFrequency: 60,
-                renderFrequency: 10
+                renderFrequency: 10,
+                backgroundColor: Color.CornflowerBlue,
+                picture: PicturesCollection.GetPicture("Test Picture")
             );
 
             window.Run();
