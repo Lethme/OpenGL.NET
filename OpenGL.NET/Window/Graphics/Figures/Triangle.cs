@@ -19,15 +19,15 @@ namespace OpenGL.Window.Graphics.Figures
         {
             Points = new FloatPoint[] 
             {
-                FloatPoint.Create(x1, y1),
-                FloatPoint.Create(x2, y2),
-                FloatPoint.Create(x3, y3)
+                (x1, y1),
+                (x2, y2),
+                (x3, y3)
             };
 
-            if (fillColor == null) this.FillColor = FloatColor.Create(Color.White);
+            if (fillColor == null) this.FillColor = Color.White;
             else this.FillColor = fillColor;
 
-            if (borderColor == null) this.BorderColor = FloatColor.Create(Color.Black);
+            if (borderColor == null) this.BorderColor = Color.Black;
             else this.BorderColor = borderColor;
         }
         public void Draw() => Graphics.DrawTriangle(this);

@@ -45,9 +45,21 @@ namespace OpenGL.Window.Graphics
                 GL.Color4(borderColor.R, borderColor.G, borderColor.B, borderColor.A);
                 GL.LineWidth(borderWidth);
 
-                foreach (var point in figure.Points)
+                if ((FigureCheck<Ellipse>(figure) && ((Ellipse)figure).AngleSum / 360f >= 1f) || !FigureCheck<Ellipse>(figure))
                 {
-                    GL.Vertex2(point.X, point.Y);
+                    foreach (var point in figure.Points)
+                    {
+                        GL.Vertex2(point.X, point.Y);
+                    }
+                }
+                else
+                {
+                    var points = figure.Points.ToList();
+                    points.Add(((Ellipse)figure).Center);
+                    foreach (var point in points)
+                    {
+                        GL.Vertex2(point.X, point.Y);
+                    }
                 }
 
                 GL.LineWidth(1f);
@@ -67,8 +79,12 @@ namespace OpenGL.Window.Graphics
 
                 GL.Color4(line.LineColor.R, line.LineColor.G, line.LineColor.B, line.LineColor.A);
                 GL.LineWidth(line.LineWidth);
-                GL.Vertex2(line.Points[0].X, line.Points[0].Y);
-                GL.Vertex2(line.Points[1].X, line.Points[1].Y);
+
+                foreach (var point in line.Points)
+                {
+                    GL.Vertex2(point.X, point.Y);
+                }
+
                 GL.LineWidth(1f);
 
                 GL.End();
@@ -85,9 +101,11 @@ namespace OpenGL.Window.Graphics
                 GL.Begin(PrimitiveType.Triangles);
 
                 GL.Color4(triangle.FillColor.R, triangle.FillColor.G, triangle.FillColor.B, triangle.FillColor.A);
-                GL.Vertex2(triangle.Points[0].X, triangle.Points[0].Y);
-                GL.Vertex2(triangle.Points[1].X, triangle.Points[1].Y);
-                GL.Vertex2(triangle.Points[2].X, triangle.Points[2].Y);
+                
+                foreach(var point in triangle.Points)
+                {
+                    GL.Vertex2(point.X, point.Y);
+                }
 
                 GL.End();
             }
@@ -105,10 +123,11 @@ namespace OpenGL.Window.Graphics
                 GL.Begin(PrimitiveType.Quads);
 
                 GL.Color4(rectangle.FillColor.R, rectangle.FillColor.G, rectangle.FillColor.B, rectangle.FillColor.A);
-                GL.Vertex2(rectangle.Points[0].X, rectangle.Points[0].Y);
-                GL.Vertex2(rectangle.Points[1].X, rectangle.Points[1].Y);
-                GL.Vertex2(rectangle.Points[2].X, rectangle.Points[2].Y);
-                GL.Vertex2(rectangle.Points[3].X, rectangle.Points[3].Y);
+                
+                foreach (var point in rectangle.Points)
+                {
+                    GL.Vertex2(point.X, point.Y);
+                }
 
                 GL.End();
             }
@@ -144,6 +163,38 @@ namespace OpenGL.Window.Graphics
         public static void Polygon(FloatColor fillColor = null, FloatColor borderColor = null, IEnumerable<FloatPoint> points = null)
         {
             Graphics.DrawPolygon(Figures.Polygon.Create(fillColor, borderColor, points));
+        }
+        public static void DrawEllipse(Figures.Ellipse ellipse)
+        {
+            for (var i = 0; i < ellipse.PointsCount - 1; i++)
+            {
+                Graphics.Triangle
+                (
+                    x1: ellipse.Center.X, y1: ellipse.Center.Y,
+                    x2: ellipse.Points[i].X, y2: ellipse.Points[i].Y,
+                    x3: ellipse.Points[i + 1].X, y3: ellipse.Points[i + 1].Y,
+                    fillColor: ellipse.FillColor,
+                    borderColor: FloatColor.Transparent
+                );
+            }
+
+            if (ellipse.AngleSum / 360f >= 1f)
+            {
+                Graphics.Triangle
+                (
+                    x1: ellipse.Center.X, y1: ellipse.Center.Y,
+                    x2: ellipse.Points[0].X, y2: ellipse.Points[0].Y,
+                    x3: ellipse.Points[ellipse.PointsCount - 1].X, y3: ellipse.Points[ellipse.PointsCount - 1].Y,
+                    fillColor: ellipse.FillColor,
+                    borderColor: FloatColor.Transparent
+                );
+            }
+
+            Graphics.SetBorder(ellipse, ellipse.BorderColor);
+        }
+        public static void Ellipse(FloatPoint center = null, float horizontalRadius = 0f, float verticalRadius = 0f, float firstAngle = 0f, float secondAngle = 360f, FloatColor fillColor = null, FloatColor borderColor = null)
+        {
+            Graphics.DrawEllipse(Figures.Ellipse.Create(center, horizontalRadius, verticalRadius, firstAngle, secondAngle, fillColor, borderColor));
         }
     }
 }

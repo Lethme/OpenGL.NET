@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 using OpenGL.Window.Graphics.Properties;
+using System.Drawing;
 
 namespace OpenGL.Window.Graphics.Figures
 {
@@ -19,16 +19,16 @@ namespace OpenGL.Window.Graphics.Figures
         {
             this.Points = new FloatPoint[] 
             {
-                FloatPoint.Create(x1, y1),
-                FloatPoint.Create(x2, y2),
-                FloatPoint.Create(x3, y3),
-                FloatPoint.Create(x4, y4)
+                (x1, y1),
+                (x2, y2),
+                (x3, y3),
+                (x4, y4)
             };
 
-            if (fillColor == null) this.FillColor = FloatColor.Create(Color.White);
+            if (fillColor == null) this.FillColor = Color.White;
             else this.FillColor = fillColor;
 
-            if (borderColor == null) this.BorderColor = FloatColor.Create(Color.Black);
+            if (borderColor == null) this.BorderColor = Color.Black;
             else this.BorderColor = borderColor;
         }
         public void Draw() => Graphics.DrawRectangle(this);

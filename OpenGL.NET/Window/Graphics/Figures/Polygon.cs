@@ -19,10 +19,10 @@ namespace OpenGL.Window.Graphics.Figures
         {
             Points = points.ToArray();
 
-            if (fillColor == null) this.FillColor = FloatColor.Create(Color.White);
+            if (fillColor == null) this.FillColor = Color.White;
             else this.FillColor = fillColor;
 
-            if (borderColor == null) this.BorderColor = FloatColor.Create(Color.Black);
+            if (borderColor == null) this.BorderColor = Color.Black;
             else this.BorderColor = borderColor;
         }
         public Polygon(FloatColor fillColor = null, FloatColor borderColor = null, IEnumerable<FloatPoint> points = null)
@@ -31,10 +31,10 @@ namespace OpenGL.Window.Graphics.Figures
             
             Points = points.ToArray();
 
-            if (fillColor == null) this.FillColor = FloatColor.Create(Color.White);
+            if (fillColor == null) this.FillColor = Color.White;
             else this.FillColor = fillColor;
 
-            if (borderColor == null) this.BorderColor = FloatColor.Create(Color.Black);
+            if (borderColor == null) this.BorderColor = Color.Black;
             else this.BorderColor = borderColor;
         }
         public void Draw() => Graphics.DrawPolygon(this);

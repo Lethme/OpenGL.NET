@@ -68,6 +68,14 @@ namespace OpenGL.UserPictures
                             (-.5f, 0f),
                             (-.2f, .2f),
                         }
+                    ),
+                    Ellipse.Create
+                    (
+                        (0f, 0f),
+                        .15f, .22f,
+                        0f, 360f,
+                        Color.Blue,
+                        Color.Red
                     )
                 )
             }

@@ -19,12 +19,12 @@ namespace OpenGL.Window.Graphics.Figures
         {
             Points = new FloatPoint[]
             {
-                FloatPoint.Create(x1, y1),
-                FloatPoint.Create(x2, y2)
+                (x1, y1),
+                (x2, y2)
             };
             LineWidth = lineWidth;
             
-            if (lineColor == null) LineColor = FloatColor.Create(Color.Black);
+            if (lineColor == null) LineColor = Color.Black;
             else LineColor = lineColor;
         }
         public void Draw() => Graphics.DrawLine(this);
