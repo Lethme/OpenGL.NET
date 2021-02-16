@@ -45,7 +45,7 @@ namespace OpenGL.Window.Graphics
                 GL.Color4(borderColor.R, borderColor.G, borderColor.B, borderColor.A);
                 GL.LineWidth(borderWidth);
 
-                if ((FigureCheck<Ellipse>(figure) && ((Ellipse)figure).AngleSum / 360f >= 1f) || !FigureCheck<Ellipse>(figure))
+                if ((FigureCheck<Ellipse>(figure) && ((Ellipse)figure).IsCompleted) || !FigureCheck<Ellipse>(figure))
                 {
                     foreach (var point in figure.Points)
                     {
@@ -164,37 +164,63 @@ namespace OpenGL.Window.Graphics
         {
             Graphics.DrawPolygon(Figures.Polygon.Create(fillColor, borderColor, points));
         }
-        public static void DrawEllipse(Figures.Ellipse ellipse)
+        public enum EllipseDrawingMethod
         {
-            for (var i = 0; i < ellipse.PointsCount - 1; i++)
+            Triangles,
+            Polygon
+        }
+        public static void DrawEllipse(Figures.Ellipse ellipse, EllipseDrawingMethod drawingMethod = EllipseDrawingMethod.Polygon)
+        {
+            switch(drawingMethod)
             {
-                Graphics.Triangle
-                (
-                    x1: ellipse.Center.X, y1: ellipse.Center.Y,
-                    x2: ellipse.Points[i].X, y2: ellipse.Points[i].Y,
-                    x3: ellipse.Points[i + 1].X, y3: ellipse.Points[i + 1].Y,
-                    fillColor: ellipse.FillColor,
-                    borderColor: FloatColor.Transparent
-                );
-            }
+                case EllipseDrawingMethod.Triangles:
+                    {
+                        for (var i = 0; i < ellipse.PointsCount - 1; i++)
+                        {
+                            Graphics.Triangle
+                            (
+                                x1: ellipse.Center.X, y1: ellipse.Center.Y,
+                                x2: ellipse.Points[i].X, y2: ellipse.Points[i].Y,
+                                x3: ellipse.Points[i + 1].X, y3: ellipse.Points[i + 1].Y,
+                                fillColor: ellipse.FillColor,
+                                borderColor: FloatColor.Transparent
+                            );
+                        }
 
-            if (ellipse.AngleSum / 360f >= 1f)
-            {
-                Graphics.Triangle
-                (
-                    x1: ellipse.Center.X, y1: ellipse.Center.Y,
-                    x2: ellipse.Points[0].X, y2: ellipse.Points[0].Y,
-                    x3: ellipse.Points[ellipse.PointsCount - 1].X, y3: ellipse.Points[ellipse.PointsCount - 1].Y,
-                    fillColor: ellipse.FillColor,
-                    borderColor: FloatColor.Transparent
-                );
+                        if (ellipse.IsCompleted)
+                        {
+                            Graphics.Triangle
+                            (
+                                x1: ellipse.Center.X, y1: ellipse.Center.Y,
+                                x2: ellipse.Points[0].X, y2: ellipse.Points[0].Y,
+                                x3: ellipse.Points[ellipse.PointsCount - 1].X, y3: ellipse.Points[ellipse.PointsCount - 1].Y,
+                                fillColor: ellipse.FillColor,
+                                borderColor: FloatColor.Transparent
+                            );
+                        }
+
+                        break;
+                    }
+                case EllipseDrawingMethod.Polygon:
+                    {
+                        if (ellipse.IsCompleted)
+                        {
+                            Graphics.Polygon(ellipse.FillColor, FloatColor.Transparent, ellipse.Points.Where((point, index) => index != ellipse.PointsCount - 1));
+                        }
+                        else
+                        {
+                            Graphics.Polygon(ellipse.FillColor, FloatColor.Transparent, ellipse.Points.Where((point, index) => index != ellipse.PointsCount).Append(ellipse.Center));
+                        }
+
+                        break;
+                    }
             }
 
             Graphics.SetBorder(ellipse, ellipse.BorderColor);
         }
         public static void Ellipse(FloatPoint center = null, float horizontalRadius = 0f, float verticalRadius = 0f, float firstAngle = 0f, float secondAngle = 360f, FloatColor fillColor = null, FloatColor borderColor = null)
         {
-            Graphics.DrawEllipse(Figures.Ellipse.Create(center, horizontalRadius, verticalRadius, firstAngle, secondAngle, fillColor, borderColor));
+            Graphics.DrawEllipse(Figures.Ellipse.Create(center, horizontalRadius, verticalRadius, firstAngle, secondAngle, fillColor, borderColor), EllipseDrawingMethod.Triangles);
         }
     }
 }
